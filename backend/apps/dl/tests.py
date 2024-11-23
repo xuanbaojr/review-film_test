@@ -2,6 +2,7 @@ from django.test import TestCase
 import inspect
 from apps.dl.registry import DLRegistry
 from apps.dl.comment.comment_predict import Comment
+from apps.dl.recommend.knn import KNN
 
 class DLTests(TestCase):
     def test_comment(self):
@@ -25,3 +26,11 @@ class DLTests(TestCase):
         registry.add_algorithm(endpoint_name, algorithm_object, algorithm_name, algorithm_status,
                                algorithm_version, algorithm_owner, algorithm_description,
                                algorithm_code)
+        
+
+class KNNTest(TestCase):
+    def test_knn(self):
+        input_data = "The Godfather"
+        predictor = KNN()
+        results = predictor.predict(input_data)
+        print("result_knn:", results)

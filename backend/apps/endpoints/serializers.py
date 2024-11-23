@@ -13,34 +13,57 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-
 class EndpointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Endpoint
         read_only_fields = ("id", "name", "owner", "created_at")
         fields = read_only_fields
 
-class DL_CommentSerializer(serializers.ModelSerializer):
-    current_status = serializers.SerializerMethodField(read_only = True)
-    def get_current_status(self, dlcomment):
-        return DL_CommentStatus.objects.filter(parent_dl_comment=dlcomment).latest("created_at").status
+
+class MLAlgorithmSerializer(serializers.ModelSerializer):
+
+    current_status = serializers.SerializerMethodField(read_only=True)
+
+    def get_current_status(self, mlalgorithm):
+        return MLAlgorithmStatus.objects.filter(parent_mlalgorithm=mlalgorithm).latest('created_at').status
 
     class Meta:
-        model = DL_Comment
-        read_only_fields = ('id', "name", "description", "code", "version",
-                            "owner", "created_at", "parent_endpoint", "current_status")
+        model = MLAlgorithm
+        read_only_fields = ("id", "name", "description", "code",
+                            "version", "owner", "created_at",
+                            "parent_endpoint", "current_status")
         fields = read_only_fields
 
-class DL_CommentStatusSerializer(serializers.ModelSerializer):
+class MLAlgorithmStatusSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DL_CommentStatus
+        model = MLAlgorithmStatus
         read_only_fields = ("id", "active")
-        fields = ("id", "active", "status", "created_by", "created_at", "parent_dl_comment")
+        fields = ("id", "active", "status", "created_by", "created_at",
+                            "parent_mlalgorithm")
 
-class DL_CommentRequestSerializer(serializers.ModelSerializer):
+class MLRequestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DL_CommentRequest
-        read_only_fields = ("id", "input_data", "full_response", "response", "created_at", 
-                            "parent_dl_comment")
-        fields = ("id", "input_data", "full_response", "response", "created_at", 
-                            "parent_dl_comment", "feedback")
+        model = MLRequests
+        read_only_fields = (
+            "id",
+            "input_data",
+            "full_response",
+            "response",
+            "created_at",
+            "parent_mlalgorithm",
+        )
+        fields =  (
+            "id",
+            "input_data",
+            "full_response",
+            "response",
+            "feedback",
+            "created_at",
+            "parent_mlalgorithm",
+        )
+
+class MovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        read_only_fields = ("id")
+        fields = ("id", "genres", "director", "casts", "keywords")
