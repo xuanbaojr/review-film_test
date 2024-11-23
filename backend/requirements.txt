@@ -12,3 +12,15 @@ markdown
 django-filter
 transaction
 numpy
+pandas
+matplotlib
+seaborn
+scipy
+joblib
+requests
+sqlalchemy
+scikit-learn
+nltk
+bs4
+pymysql
+cryptography

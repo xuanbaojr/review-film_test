@@ -1,16 +1,13 @@
 from apps.endpoints.models import *
 
-class DLRegistry:
-    def __init__(self) -> None:
+class MLRegistry:
+    def __init__(self):
         self.endpoints = {}
-    
-    def add_algorithm(self, endpoint_name, algorithm_object, algorithm_name,
-                      algorithm_status, algorithm_version, owner,
-                      algorithm_description, algorithm_code):
+    def add_algorithm(self, endpoint_name, algorithm_object, algorithm_name, algorithm_status,
+                        algorithm_version, owner, algorithm_description, algorithm_code):
         
         endpoint, _ = Endpoint.objects.get_or_create(name=endpoint_name, owner=owner)
-
-        database_object, algorithm_created = DL_Comment.objects.get_or_create(
+        database_object, algorithm_created = MLAlgorithm.objects.get_or_create(
             name=algorithm_name,
             description=algorithm_description,
             code=algorithm_code,
@@ -18,12 +15,13 @@ class DLRegistry:
             owner=owner,
             parent_endpoint=endpoint
         )
-
         if algorithm_created:
-            status = DL_CommentStatus(status=algorithm_status,
-                                      created_by=owner,
-                                      parent_dl_comment=database_object,
-                                      active=True)
+            status = MLAlgorithmStatus(status=algorithm_status,
+                                       created_by=owner,
+                                       parent_algorithm=database_object,
+                                       active=True)
+            
             status.save()
         
+        # add to registry
         self.endpoints[database_object.id] = algorithm_object
